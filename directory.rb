@@ -4,15 +4,18 @@
 def print_menu
     puts "1. Input the students"
     puts "2. Show the students"
+    puts "3. Save the list of students"
     puts "9. Exit"
 end
 
-def process(user_input)
+def process_menu_input(user_input)
   case user_input
   when "1"
     get_name
   when "2"
     print_all_info
+  when "3"
+    store_students
   when "9"
     exit
   else
@@ -23,7 +26,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process_menu_input(gets.chomp)
   end
 end
 
@@ -60,6 +63,15 @@ def print_all_info
   print_header
   print_student_info
   print_footer
+end
+
+def store_students
+  file = File.open("students.csv", "w")
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]].join(",")
+    file.puts student_data
+  end
+  file.close
 end
 
 interactive_menu
