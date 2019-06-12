@@ -24,7 +24,6 @@ class Students_academy
       print_all_info
     when "3"
       store_students
-      puts "Students saved successfully"
     when "4"
       load_students
     when "9"
@@ -67,7 +66,7 @@ class Students_academy
   def print_footer
     puts "-------------"
     puts "Overall, we have #{@students.count} great students"
-      puts "-------------"
+    puts "-------------"
   end
 
   def print_all_info
@@ -83,6 +82,13 @@ class Students_academy
       file.puts student_data
     end
     file.close
+    store_students_success_message
+  end
+
+  def store_students_success_message
+    puts "-------------"
+    puts "Students saved successfully"
+    puts "-------------"
   end
 
   def load_students(filename = "./lib/students.csv")
@@ -92,6 +98,13 @@ class Students_academy
       add_students_to_array({name: name, cohort: cohort.to_sym})
     end
     file.close
+    load_students_success_message(filename)
+  end
+
+  def load_students_success_message(filename)
+    puts "-------------"
+    puts "Loaded #{@students.count} from #{filename}"
+    puts "-------------"
   end
 
   def load_students_on_startup
@@ -99,12 +112,18 @@ class Students_academy
     return load_students if filename.nil?
     if File.exists?(filename)
       load_students(filename)
-      puts "Loaded #{@students.count} from #{filename}"
     else
-      puts "Sorry #{filename} doesn't exist"
+      load_students_on_startup_unsuccessful_message(filename)
       exit
     end
   end
+
+  def load_students_on_startup_unsuccessful_message(filename)
+    puts "-------------"
+    puts "Sorry #{filename} doesn't exist"
+    puts "-------------"
+  end
+
 
   def add_students_to_array(student_info)
     @students << student_info
