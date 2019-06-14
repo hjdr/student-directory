@@ -1,18 +1,23 @@
 require "directory.rb"
+require 'rspec'
 
-describe Villains do
-  describe "#method adds students to an array" do
+RSpec.describe Students_academy do
+  describe "#add_students_to_array" do
     it "should return an array" do
-      expect(Villains.add_students_to_array({a: "b"})).to be_an_instance_of(Array)
+      expect(subject.add_students_to_array({a: "b"})).to be_an_instance_of(Array)
     end
   end
-end
 
-describe Villains do
-  describe "#method adds students to an array"  do
-    it "the returned array should include a hash(s)" do
-      expect(Villains.add_students_to_array({a: "b"})).to include(Hash)
+  describe "#add_students_to_array"  do
+    it "returns an array which includes a student info hash(s)" do
+      expect(subject.add_students_to_array({a: "b"})).to include(Hash)
     end
   end
-end
+  
+  describe "#filename_user_input" do
+    it "gets filename and passed to load_students method" do
+    expect(subject.filename_user_input).to eq (subject.load_students("./lib/testfile.csv"))
+    end
+  end
 
+end

@@ -1,3 +1,6 @@
+
+
+require "CSV"
 # list of students at Villains Academy
 
 Students_academy = Class.new
@@ -23,9 +26,9 @@ class Students_academy
     when "2"
       print_all_info
     when "3"
-      store_students
+      filename_user_input("save")
     when "4"
-      load_students
+      filename_user_input("load")
     when "9"
       exit
     else
@@ -75,36 +78,45 @@ class Students_academy
     print_footer
   end
 
-  def store_students
-    file = File.open("./lib/students.csv", "w")
+  def save_students(filename = "./lib/students.csv")
+    file = File.open(filename, "w")
     @students.each do |student|
       student_data = [student[:name], student[:cohort]].join(",")
       file.puts student_data
     end
     file.close
-    store_students_success_message
+    save_students_success_message
   end
 
-  def store_students_success_message
+  def save_students_success_message
     puts "-------------"
     puts "Students saved successfully"
     puts "-------------"
   end
 
   def load_students(filename = "./lib/students.csv")
-    file = File.open(filename, "r")
-    file.readlines.each do |line|
-      name, cohort = line.split(",")
+    counter = 0
+    CSV.foreach(filename) do |line|
+      name, cohort = line
       add_students_to_array({name: name, cohort: cohort.to_sym})
     end
-    file.close
-    load_students_success_message(filename)
+    load_students_success_message(filename, counter)
   end
 
-  def load_students_success_message(filename)
+  def load_students_success_message(filename, counter)
     puts "-------------"
-    puts "Loaded #{@students.count} from #{filename}"
+    puts "Loaded #{counter} from #{filename}"
     puts "-------------"
+  end
+
+  def filename_user_input(command)
+    puts "Enter filename to load/save from or press enter to use default file"
+    filename = STDIN.gets.chomp
+    if command == "load"
+      filename == "" ? load_students : load_students(filename)
+    elsif command == "save"
+      filename == "" ? save_students : save_students(filename)
+    end
   end
 
   def load_students_on_startup
@@ -124,15 +136,13 @@ class Students_academy
     puts "-------------"
   end
 
-
   def add_students_to_array(student_info)
     @students << student_info
   end
 
 end
 
-Villains = Students_academy.new
+villains = Students_academy.new
 
-Villains.load_students_on_startup
-Villains.interactive_menu
-
+villains.load_students_on_startup
+villains.interactive_menu
